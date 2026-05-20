@@ -45,6 +45,12 @@ const InventoryPage = () => {
   const [sortCol, setSortCol] = useState<SortCol>("");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const [selectedSku, setSelectedSku] = useState<InventoryItem | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  
+  const showToast = (message: string, type: "success" | "error" = "success") => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
   
   const debounced = useDebounce(store.searchInput, 500);
 
@@ -68,21 +74,25 @@ const InventoryPage = () => {
     finally { setExporting(false); }
   };
 
-  const handleRestock = async (id: string) => {
+  const handleRestock = async (id: string, name: string) => {
     try {
-      await fetch("/api/inventory/restock", {
+      const res = await fetch("/api/inventory/restock", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, quantity: 250 }),
       });
+      if (!res.ok) throw new Error();
       
       queryClient.invalidateQueries({ queryKey: ["inventory"] });
+      queryClient.invalidateQueries({ queryKey: ["analytics"] });
       
       if (selectedSku && selectedSku.id === id) {
         setSelectedSku({ ...selectedSku, stock: selectedSku.stock + 250 });
       }
+      showToast(`Restocked +250 units for ${name}`, "success");
     } catch (e) {
       console.error(e);
+      showToast(`Failed to restock ${name}`, "error");
     }
   };
 
@@ -189,7 +199,7 @@ const InventoryPage = () => {
                 ? Array.from({ length: 12 }).map((_, i) => (
                     <tr key={i} className="border-b" style={{ borderColor: "#E5E7EB" }}>
                       {Array.from({ length: 8 }).map((_, j) => (
-                        <td key={j} className="p-3"><div className="skeleton h-4 rounded" style={{ width: `${60 + Math.random() * 40}%` }} /></td>
+                        <td key={j} className="p-3"><div className="skeleton h-4 rounded" style={{ width: `${60 + ((i * 8 + j) * 17 % 40)}%` }} /></td>
                       ))}
                     </tr>
                   ))
@@ -199,18 +209,32 @@ const InventoryPage = () => {
                       No products match your filters.
                     </td></tr>
                   )
-                  : data.rows.map((row) => (
-                      <tr key={row.id} className="border-b transition-colors hover:bg-gray-50 cursor-pointer" style={{ borderColor: "#E5E7EB" }} onClick={() => setSelectedSku(row)}>
-                        <td className="p-3 font-medium" style={{ color: "#000", minWidth: 200 }}>{row.name}</td>
-                        <td className="p-3" style={{ fontFamily: "ui-monospace, monospace", fontSize: 13, color: "#45464c" }}>{row.sku}</td>
-                        <td className="p-3"><CategoryBadge cat={row.category} /></td>
-                        <td className="p-3 text-right" style={{ fontFamily: "ui-monospace, monospace", fontSize: 13, color: "#000" }}>${row.price.toFixed(2)}</td>
-                        <td className="p-3 text-right" style={{ fontFamily: "ui-monospace, monospace", fontSize: 13, color: "#45464c" }}>${(row.price * 0.65).toFixed(2)}</td>
-                        <td className="p-3 text-right" style={{ fontFamily: "ui-monospace, monospace", fontSize: 13 }}>{row.stock.toLocaleString()}</td>
-                        <td className="p-3 text-right" style={{ fontFamily: "ui-monospace, monospace", fontSize: 13, color: "#45464c" }}>{row.reorderPoint}</td>
-                        <td className="p-3" style={{ fontSize: 13, color: "#45464c" }}>{row.lastRestocked}</td>
-                      </tr>
-                    ))
+                  : data.rows.map((row) => {
+                      const maxStockVal = row.reorderPoint * 2.5 || 100;
+                      const percent = Math.min(100, (row.stock / maxStockVal) * 100);
+                      const barColor = row.stock === 0 ? "#EF4444" : row.stock <= row.reorderPoint ? "#F97316" : "#10B981";
+                      return (
+                        <tr key={row.id} className="border-b transition-colors hover:bg-gray-50 cursor-pointer" style={{ borderColor: "#E5E7EB" }} onClick={() => setSelectedSku(row)}>
+                          <td className="p-3 font-medium" style={{ color: "#000", minWidth: 200 }}>{row.name}</td>
+                          <td className="p-3" style={{ fontFamily: "ui-monospace, monospace", fontSize: 13, color: "#45464c" }}>{row.sku}</td>
+                          <td className="p-3"><CategoryBadge cat={row.category} /></td>
+                          <td className="p-3 text-right" style={{ fontFamily: "ui-monospace, monospace", fontSize: 13, color: "#000" }}>${row.price.toFixed(2)}</td>
+                          <td className="p-3 text-right" style={{ fontFamily: "ui-monospace, monospace", fontSize: 13, color: "#45464c" }}>${(row.price * 0.65).toFixed(2)}</td>
+                          <td className="p-3" style={{ minWidth: 140 }}>
+                            <div className="flex flex-col items-end gap-1">
+                              <span style={{ fontFamily: "ui-monospace, monospace", fontSize: 13, color: row.stock === 0 ? "#EF4444" : row.stock <= row.reorderPoint ? "#F97316" : "#000", fontWeight: 500 }}>
+                                {row.stock.toLocaleString()}
+                              </span>
+                              <div className="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                                <div className="h-full rounded-full transition-all duration-300" style={{ width: `${percent}%`, backgroundColor: barColor }} />
+                              </div>
+                            </div>
+                          </td>
+                          <td className="p-3 text-right" style={{ fontFamily: "ui-monospace, monospace", fontSize: 13, color: "#45464c" }}>{row.reorderPoint}</td>
+                          <td className="p-3" style={{ fontSize: 13, color: "#45464c" }}>{row.lastRestocked}</td>
+                        </tr>
+                      );
+                    })
               }
             </tbody>
           </table>
@@ -259,7 +283,7 @@ const InventoryPage = () => {
                 <span className="text-sm font-semibold" style={{ color: "#3B82F6", fontFamily: "ui-monospace, monospace" }}>{selectedSku.sku}</span>
                 <h2 className="text-xl font-bold mt-1 text-gray-900">SKU Specification</h2>
               </div>
-              <button onClick={() => setSelectedSku(null)} className="w-8 h-8 rounded-md flex items-center justify-center border hover:bg-gray-50" style={{ borderColor: "#E5E7EB" }}>
+              <button aria-label="Close details dialog" onClick={() => setSelectedSku(null)} className="w-8 h-8 rounded-md flex items-center justify-center border hover:bg-gray-50" style={{ borderColor: "#E5E7EB" }}>
                 <X size={16} />
               </button>
             </div>
@@ -309,7 +333,7 @@ const InventoryPage = () => {
 
             <div className="mt-auto pt-6 border-t flex gap-3" style={{ borderColor: "#E5E7EB" }}>
               <button
-                onClick={() => handleRestock(selectedSku.id)}
+                onClick={() => handleRestock(selectedSku.id, selectedSku.name)}
                 className="flex-1 rounded-lg flex items-center justify-center text-sm font-semibold transition-colors"
                 style={{ background: "#3B82F6", color: "#fff", height: 44 }}
               >
@@ -324,6 +348,18 @@ const InventoryPage = () => {
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {toast && (
+        <div
+          className="fixed bottom-5 right-5 z-[999] px-4 py-3 rounded-lg shadow-lg flex items-center gap-2 text-sm text-white"
+          style={{
+            background: toast.type === "success" ? "#10B981" : "#EF4444",
+            boxShadow: "0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05)",
+          }}
+        >
+          <span>{toast.message}</span>
         </div>
       )}
     </section>

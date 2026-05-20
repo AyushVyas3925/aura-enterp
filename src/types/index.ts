@@ -26,6 +26,7 @@ export type AnalyticsResponse = {
   totalSKUs: number;
   totalInventoryValue: number;
   outOfStockCount: number;
+  lowStockCount: number;
   portfolioBreakdown: { name: string; value: number }[];
   top10: { name: string; stock: number; reorder: number; fullName: string }[];
 };

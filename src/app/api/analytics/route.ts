@@ -6,12 +6,17 @@ export async function GET() {
 
   let totalValue = 0;
   let outOfStock = 0;
+  let lowStock = 0;
   const byCategory: Record<string, number> = {};
 
   for (const item of data) {
     const val = item.price * item.stock;
     totalValue += val;
-    if (item.stock === 0) outOfStock++;
+    if (item.stock === 0) {
+      outOfStock++;
+    } else if (item.stock <= item.reorderPoint) {
+      lowStock++;
+    }
     byCategory[item.category] = (byCategory[item.category] ?? 0) + val;
   }
 
@@ -24,7 +29,7 @@ export async function GET() {
     .sort((a, b) => a.stock - b.stock)
     .slice(0, 10)
     .map(item => ({
-      name: item.name.length > 24 ? item.name.slice(0, 24) + '…' : item.name,
+      name: item.name.length > 16 ? item.name.slice(0, 16) + '…' : item.name,
       stock: item.stock,
       reorder: item.reorderPoint,
       fullName: item.name,
@@ -34,6 +39,7 @@ export async function GET() {
     totalSKUs: data.length,
     totalInventoryValue: Math.round(totalValue),
     outOfStockCount: outOfStock,
+    lowStockCount: lowStock,
     portfolioBreakdown,
     top10,
   });
