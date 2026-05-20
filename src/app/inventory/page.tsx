@@ -111,7 +111,9 @@ const InventoryPage = () => {
       <div className="bg-white border rounded-lg p-3 flex flex-wrap items-center gap-3" style={{ borderColor: "#E5E7EB", background: "#FFFFFF" }}>
         <div className="relative flex-1 min-w-52">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2" size={16} color="#45464c" />
+        <label htmlFor="inventory-search" className="sr-only">Search inventory</label>
           <input
+            id="inventory-search"
             className="w-full h-9 pl-9 pr-3 rounded border text-sm outline-none"
             style={{ borderColor: "#E5E7EB", fontSize: 14, color: "#1b1b1d" }}
             placeholder="Search by SKU or Name..."
@@ -121,7 +123,10 @@ const InventoryPage = () => {
           />
         </div>
 
+        <label htmlFor="category-filter" className="sr-only">Filter by category</label>
         <select
+          id="category-filter"
+          aria-label="Filter by category"
           className="h-9 rounded border text-sm outline-none min-w-36"
           style={{ borderColor: "#E5E7EB", fontSize: 13, color: "#1b1b1d", background: "#FFFFFF" }}
           value={store.category}
@@ -132,8 +137,11 @@ const InventoryPage = () => {
         </select>
 
         <div className="flex items-center gap-2 border rounded h-9 px-3" style={{ borderColor: "#E5E7EB", background: "#FFFFFF" }}>
-          <span className="whitespace-nowrap" style={{ fontSize: 13, color: "#45464c" }}>Stock ≤ 500</span>
-          <input type="range" min={0} max={500} step={5} className="w-24"
+          <label htmlFor="stock-range" className="whitespace-nowrap" style={{ fontSize: 13, color: "#374151" }}>Stock ≤ 500</label>
+          <input
+            id="stock-range"
+            type="range" min={0} max={500} step={5} className="w-24"
+            aria-label={`Maximum stock filter: ${store.maxStock === null ? 500 : store.maxStock}`}
             value={store.maxStock === null ? 500 : store.maxStock}
             onChange={e => { const v = parseInt(e.target.value); store.setMaxStock(v >= 500 ? null : v); }}
           />

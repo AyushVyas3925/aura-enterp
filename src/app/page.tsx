@@ -46,12 +46,13 @@ const Home = function () {
 
           <div className="flex items-center gap-1">
             <button
-              aria-label="Notifications"
               className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors relative"
               style={{ color: "#4B5563" }}
+              title="Notifications"
             >
-              <Bell size={17} />
+              <Bell size={17} aria-hidden="true" />
               <span
+                aria-label="3 notifications"
                 className="absolute flex items-center justify-center rounded-full text-white font-bold"
                 style={{
                   top: 5,
@@ -90,65 +91,76 @@ const Home = function () {
         </div>
 
         {/* Row 2 – tabs: pill follows actual button dimensions via refs */}
-        <div className="relative flex items-center gap-2 px-4 md:px-6 pt-2 pb-3">
+        <nav aria-label="Main navigation" className="relative px-4 md:px-6 pt-2 pb-3">
+          <div
+            role="tablist"
+            aria-label="Application views"
+            className="relative flex items-center gap-2"
+          >
 
-          {/* Sliding pill — positioned & sized by measured button DOM rect */}
-          {pill.ready && (
-            <div
-              style={{
-                position: "absolute",
-                top: pill.top,
-                left: pill.left,
-                width: pill.width,
-                height: pill.height,
-                background: "#1b1b1d",
-                borderRadius: 8,
-                transition: "left 0.22s cubic-bezier(0.4,0,0.2,1), width 0.22s cubic-bezier(0.4,0,0.2,1)",
-                pointerEvents: "none",
-                zIndex: 0,
-              }}
-            />
-          )}
-
-          {NAV_TABS.map(({ id, label, icon: Icon }, idx) => {
-            const active = view === id;
-            return (
-              <button
-                key={id}
-                id={`nav-${id}`}
-                role="tab"
-                aria-selected={active}
-                ref={el => { btnRefs.current[idx] = el; }}
-                onClick={() => setView(id)}
+            {/* Sliding pill — positioned & sized by measured button DOM rect */}
+            {pill.ready && (
+              <div
+                aria-hidden="true"
                 style={{
-                  position: "relative",
-                  zIndex: 1,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                  padding: "6px 14px",
+                  position: "absolute",
+                  top: pill.top,
+                  left: pill.left,
+                  width: pill.width,
+                  height: pill.height,
+                  background: "#1b1b1d",
                   borderRadius: 8,
-                  fontSize: 13,
-                  fontWeight: 500,
-                  whiteSpace: "nowrap",
-                  cursor: "pointer",
-                  background: "transparent",
-                  color: active ? "#ffffff" : "#4B5563",
-                  border: "none",
-                  transition: "color 0.2s ease",
+                  transition: "left 0.22s cubic-bezier(0.4,0,0.2,1), width 0.22s cubic-bezier(0.4,0,0.2,1)",
+                  pointerEvents: "none",
+                  zIndex: 0,
                 }}
-              >
-                <Icon size={14} strokeWidth={active ? 2.5 : 2} />
-                {label}
-              </button>
-            );
-          })}
-        </div>
+              />
+            )}
+
+            {NAV_TABS.map(({ id, label, icon: Icon }, idx) => {
+              const active = view === id;
+              return (
+                <button
+                  key={id}
+                  id={`nav-${id}`}
+                  role="tab"
+                  aria-selected={active}
+                  aria-controls={`panel-${id}`}
+                  ref={el => { btnRefs.current[idx] = el; }}
+                  onClick={() => setView(id)}
+                  style={{
+                    position: "relative",
+                    zIndex: 1,
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
+                    padding: "6px 14px",
+                    borderRadius: 8,
+                    fontSize: 13,
+                    fontWeight: 500,
+                    whiteSpace: "nowrap",
+                    cursor: "pointer",
+                    background: "transparent",
+                    color: active ? "#ffffff" : "#4B5563",
+                    border: "none",
+                    transition: "color 0.2s ease",
+                  }}
+                >
+                  <Icon size={14} aria-hidden="true" strokeWidth={active ? 2.5 : 2} />
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+        </nav>
       </header>
 
       {/* ── PAGE CONTENT ── */}
       <main className="flex-1 overflow-hidden relative">
         <div
+          id="panel-dashboard"
+          role="tabpanel"
+          aria-labelledby="nav-dashboard"
           className="absolute inset-0 overflow-y-auto p-4 md:p-6 transition-opacity duration-200"
           style={{
             opacity: view === "dashboard" ? 1 : 0,
@@ -159,6 +171,9 @@ const Home = function () {
         </div>
 
         <div
+          id="panel-inventory"
+          role="tabpanel"
+          aria-labelledby="nav-inventory"
           className="absolute inset-0 overflow-y-auto p-4 md:p-6 transition-opacity duration-200"
           style={{
             opacity: view === "inventory" ? 1 : 0,

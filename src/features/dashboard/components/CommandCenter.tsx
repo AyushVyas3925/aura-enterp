@@ -110,7 +110,7 @@ export function CommandCenter() {
               borderColor="#3B82F6"
               icon={Package}
               trend="+4 added this week"
-              trendColor="#10B981"
+              trendColor="#1D4ED8"
             />
             <KpiCard
               label="Total Inventory Value"
@@ -119,7 +119,7 @@ export function CommandCenter() {
               borderColor="#10B981"
               icon={DollarSign}
               trend="+12.4% vs last quarter"
-              trendColor="#10B981"
+              trendColor="#065F46"
             />
             <KpiCard
               label="Out of Stock Alerts"
@@ -127,7 +127,7 @@ export function CommandCenter() {
               borderColor="#EF4444"
               icon={AlertOctagon}
               trend={data!.outOfStockCount === 0 ? "All items active" : `${data!.outOfStockCount} critical items`}
-              trendColor={data!.outOfStockCount === 0 ? "#10B981" : "#EF4444"}
+              trendColor={data!.outOfStockCount === 0 ? "#065F46" : "#991B1B"}
             />
             <KpiCard
               label="Low Stock Warnings"
@@ -135,7 +135,7 @@ export function CommandCenter() {
               borderColor="#F97316"
               icon={AlertTriangle}
               trend={data!.lowStockCount === 0 ? "Optimal stock levels" : "Requires replenishment"}
-              trendColor={data!.lowStockCount === 0 ? "#10B981" : "#F97316"}
+              trendColor={data!.lowStockCount === 0 ? "#065F46" : "#9A3412"}
             />
           </>
         )}
