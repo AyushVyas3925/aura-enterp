@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aura Enterprise Engine - Main Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container": "#f0edee",
+                        "apparel-text": "#5B21B6",
+                        "on-tertiary": "#ffffff",
+                        "furniture-amber": "#F59E0B",
+                        "on-tertiary-fixed": "#261906",
+                        "status-out-bg": "#FEE2E2",
+                        "furniture-bg": "#FFFBEB",
+                        "status-in-bg": "#D1FAE5",
+                        "secondary-container": "#dce2f3",
+                        "on-surface": "#1b1b1d",
+                        "inverse-primary": "#c0c6db",
+                        "on-secondary-fixed": "#151c27",
+                        "status-low-text": "#92400E",
+                        "on-primary-container": "#7d8497",
+                        "outline": "#76777d",
+                        "on-primary": "#ffffff",
+                        "electronics-bg": "#EFF6FF",
+                        "tertiary-fixed": "#f9debf",
+                        "apparel-bg": "#F5F3FF",
+                        "secondary-fixed-dim": "#c0c7d6",
+                        "status-low-bg": "#FEF3C7",
+                        "surface-container-low": "#f6f3f4",
+                        "surface-bright": "#fcf8fa",
+                        "food-text": "#065F46",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-tint": "#575e70",
+                        "on-error": "#ffffff",
+                        "sports-bg": "#FFF1F2",
+                        "tertiary": "#000000",
+                        "error": "#ba1a1a",
+                        "status-in-text": "#065F46",
+                        "electronics-text": "#1D4ED8",
+                        "outline-variant": "#c6c6cd",
+                        "surface-container-high": "#eae7e9",
+                        "on-secondary": "#ffffff",
+                        "sports-text": "#9F1239",
+                        "primary": "#000000",
+                        "on-secondary-fixed-variant": "#404754",
+                        "furniture-text": "#92400E",
+                        "secondary": "#585f6c",
+                        "primary-fixed": "#dce2f7",
+                        "surface-variant": "#e5e2e3",
+                        "on-surface-variant": "#45464c",
+                        "surface": "#fcf8fa",
+                        "on-error-container": "#93000a",
+                        "primary-fixed-dim": "#c0c6db",
+                        "on-secondary-container": "#5e6572",
+                        "on-tertiary-fixed-variant": "#55442d",
+                        "on-tertiary-container": "#968065",
+                        "apparel-purple": "#8B5CF6",
+                        "food-green": "#10B981",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#141b2b",
+                        "tertiary-fixed-dim": "#dcc2a4",
+                        "status-out-text": "#991B1B",
+                        "on-primary-fixed": "#141b2b",
+                        "surface-dim": "#dcd9db",
+                        "electronics-blue": "#3B82F6",
+                        "on-background": "#1b1b1d",
+                        "tertiary-container": "#261906",
+                        "sports-coral": "#F43F5E",
+                        "secondary-fixed": "#dce2f3",
+                        "on-primary-fixed-variant": "#404758",
+                        "inverse-surface": "#303031",
+                        "inverse-on-surface": "#f3f0f1",
+                        "background": "#fcf8fa",
+                        "border-base": "#E5E7EB",
+                        "surface-container-highest": "#e5e2e3",
+                        "food-bg": "#ECFDF5"
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px"
+                    },
+                    spacing: {
+                        "grid-gutter": "1rem",
+                        "container-padding": "1.5rem",
+                        "element-gap": "0.5rem",
+                        "section-margin": "2rem"
+                    },
+                    fontFamily: {
+                        "headline-md": ["Inter", "sans-serif"],
+                        "badge-text": ["Inter", "sans-serif"],
+                        "body-mono": ["ui-monospace", "monospace"],
+                        "body-base": ["Inter", "sans-serif"],
+                        "kpi-value": ["Inter", "sans-serif"],
+                        "label-sm": ["Inter", "sans-serif"]
+                    },
+                    fontSize: {
+                        "headline-md": ["18px", { lineHeight: "24px", fontWeight: "600" }],
+                        "badge-text": ["12px", { lineHeight: "14px", letterSpacing: "0.01em", fontWeight: "600" }],
+                        "body-mono": ["13px", { lineHeight: "18px", fontWeight: "400" }],
+                        "body-base": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+                        "kpi-value": ["28px", { lineHeight: "34px", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "label-sm": ["13px", { lineHeight: "16px", fontWeight: "500" }]
+                    }
+                }
+            }
+        };
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Utility styles for consistent scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fcf8fa; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c6c6cd; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #76777d; 
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex font-body-base">
+<!-- SideNavBar -->
+<nav class="bg-surface-container-lowest dark:bg-surface-container-lowest flex flex-col w-64 h-full py-grid-gutter shrink-0 docked h-screen left-0 border-r border-outline-variant flat no shadows sticky top-0">
+<div class="px-container-padding mb-8">
+<h1 class="font-headline-md text-headline-md font-black text-primary tracking-tight">Aura Engine</h1>
+</div>
+<div class="px-container-padding mb-6 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-secondary-container">person</span>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-primary font-bold">Inventory Ops</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Global Logistics</div>
+</div>
+</div>
+<div class="px-container-padding mb-6">
+<button class="w-full bg-primary text-on-primary h-10 rounded-lg font-label-sm text-label-sm flex items-center justify-center gap-2 hover:bg-surface-tint transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+                New Entry
+            </button>
+</div>
+<ul class="flex-1 px-element-gap flex flex-col gap-1">
+<li>
+<a class="flex items-center gap-3 px-3 py-2 bg-secondary-container dark:bg-secondary-container text-on-secondary-container font-bold rounded-lg font-label-sm text-label-sm active:translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+                    Command Center
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-colors rounded-lg font-label-sm text-label-sm active:translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+                    Inventory
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-colors rounded-lg font-label-sm text-label-sm active:translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+                    Orders
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-colors rounded-lg font-label-sm text-label-sm active:translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined">analytics</span>
+                    Analytics
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-colors rounded-lg font-label-sm text-label-sm active:translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined">local_shipping</span>
+                    Suppliers
+                </a>
+</li>
+</ul>
+<div class="px-element-gap mt-auto">
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-colors rounded-lg font-label-sm text-label-sm" href="#">
+<span class="material-symbols-outlined">logout</span>
+                Logout
+            </a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col min-w-0">
+<!-- TopNavBar -->
+<header class="bg-surface-container-lowest dark:bg-surface-container-lowest flex justify-between items-center w-full px-container-padding h-16 sticky top-0 z-50 docked full-width top-0 border-b border-outline-variant flat no shadows">
+<div class="flex-1 flex items-center">
+<!-- Search bar on left as per TopNavBar JSON -->
+<div class="relative w-64 hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" style="font-size: 20px;">search</span>
+<input class="w-full h-9 pl-10 pr-3 rounded border border-border-base bg-surface-container-lowest text-on-surface font-body-base focus:border-primary focus:ring-0 transition-colors placeholder:text-on-surface-variant" placeholder="Search system..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors duration-200 active:scale-95">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors duration-200 active:scale-95">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors duration-200 active:scale-95">
+<span class="material-symbols-outlined">help</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-secondary-container ml-2 shrink-0 overflow-hidden border border-border-base">
+<img alt="Administrator Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a corporate administrator in a modern office setting. The lighting is bright and clean, emphasizing a competent and approachable demeanor." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuQQ2xzJaZla4KHMPQZajdHfhPNnXuIvIM_amT4cRh-xne5V_SQsQOijNq1XOmDuAMN0NrIvdZWAV_SIcG6cKajrh8JLDLuOmRl3Zb4Xbe3er_1hI2_R-xINrqJxRFxreyY-pwroDw-TmHQeSe1QQYQwW_yOV4mI_lO8RlgFR-y_VwQca7p3QzTFLLZezAYRxFczTVYMw1-DWmkkYQfZqK2IHvFq7x9lKL8JNRpXPdCtBhX71uav3o43PIEXgbzIULbqyEeg5DYZM"/>
+</div>
+</div>
+</header>
+<div class="p-container-padding flex flex-col gap-section-margin overflow-y-auto">
+<!-- Command Center Top Section -->
+<section>
+<h2 class="font-headline-md text-headline-md text-primary mb-4">Command Center</h2>
+<!-- KPI Row -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-grid-gutter mb-grid-gutter">
+<!-- KPI 1 -->
+<div class="bg-surface-container-lowest border border-border-base rounded-lg p-4 border-l-4 border-l-electronics-blue flex flex-col justify-between">
+<div class="text-on-surface-variant font-label-sm text-label-sm mb-2">Total SKUs Active</div>
+<div class="font-kpi-value text-kpi-value text-primary">24,592</div>
+</div>
+<!-- KPI 2 -->
+<div class="bg-surface-container-lowest border border-border-base rounded-lg p-4 border-l-4 border-l-food-green flex flex-col justify-between">
+<div class="text-on-surface-variant font-label-sm text-label-sm mb-2">Total Inventory Value</div>
+<div class="font-kpi-value text-kpi-value text-primary">$12.4M</div>
+</div>
+<!-- KPI 3 -->
+<div class="bg-surface-container-lowest border border-border-base rounded-lg p-4 border-l-4 border-l-error flex flex-col justify-between">
+<div class="text-on-surface-variant font-label-sm text-label-sm mb-2">Out of Stock Alerts</div>
+<div class="font-kpi-value text-kpi-value text-primary flex items-baseline gap-2">
+                            148
+                            <span class="font-label-sm text-label-sm text-error flex items-center">
+<span class="material-symbols-outlined" style="font-size: 16px;">arrow_upward</span>
+                                12%
+                            </span>
+</div>
+</div>
+</div>
+<!-- Charts Row (60/40 Split) -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-grid-gutter">
+<!-- Restock Priority (60%) -->
+<div class="xl:col-span-7 bg-surface-container-lowest border border-border-base rounded-lg p-4 flex flex-col">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-label-sm text-label-sm font-bold text-primary">Restock Priority (Top 5 Low Stock)</h3>
+<button class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined" style="font-size: 20px;">more_vert</span></button>
+</div>
+<div class="flex-1 flex flex-col justify-end gap-3 min-h-[200px]">
+<!-- Mock Bar Chart -->
+<div class="flex items-center gap-2">
+<div class="w-24 text-right font-body-mono text-body-mono text-on-surface-variant truncate">SKU-A12</div>
+<div class="flex-1 bg-surface-container h-6 rounded overflow-hidden">
+<div class="bg-error h-full" style="width: 15%;"></div>
+</div>
+<div class="w-12 font-body-mono text-body-mono text-primary text-right">15/100</div>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-24 text-right font-body-mono text-body-mono text-on-surface-variant truncate">SKU-B44</div>
+<div class="flex-1 bg-surface-container h-6 rounded overflow-hidden">
+<div class="bg-error h-full" style="width: 22%;"></div>
+</div>
+<div class="w-12 font-body-mono text-body-mono text-primary text-right">22/100</div>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-24 text-right font-body-mono text-body-mono text-on-surface-variant truncate">SKU-C99</div>
+<div class="flex-1 bg-surface-container h-6 rounded overflow-hidden">
+<div class="bg-furniture-amber h-full" style="width: 35%;"></div>
+</div>
+<div class="w-12 font-body-mono text-body-mono text-primary text-right">35/100</div>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-24 text-right font-body-mono text-body-mono text-on-surface-variant truncate">SKU-D01</div>
+<div class="flex-1 bg-surface-container h-6 rounded overflow-hidden">
+<div class="bg-furniture-amber h-full" style="width: 42%;"></div>
+</div>
+<div class="w-12 font-body-mono text-body-mono text-primary text-right">42/100</div>
+</div>
+</div>
+</div>
+<!-- Portfolio Value (40%) -->
+<div class="xl:col-span-5 bg-surface-container-lowest border border-border-base rounded-lg p-4 flex flex-col">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-label-sm text-label-sm font-bold text-primary">Portfolio Value by Category</h3>
+</div>
+<div class="flex-1 flex items-center justify-center min-h-[200px]">
+<!-- Mock Donut Chart using Conic Gradient -->
+<div class="relative w-40 h-40 rounded-full" style="background: conic-gradient(#3B82F6 0% 45%, #10B981 45% 75%, #F59E0B 75% 90%, #8B5CF6 90% 100%);">
+<div class="absolute inset-2 bg-surface-container-lowest rounded-full flex items-center justify-center">
+<div class="text-center">
+<div class="font-label-sm text-label-sm text-on-surface-variant">Total</div>
+<div class="font-headline-md text-headline-md text-primary">$12.4M</div>
+</div>
+</div>
+</div>
+<!-- Legend -->
+<div class="ml-6 flex flex-col gap-2">
+<div class="flex items-center gap-2 font-label-sm text-label-sm">
+<span class="w-3 h-3 rounded-full bg-electronics-blue"></span> Electronics (45%)
+                                </div>
+<div class="flex items-center gap-2 font-label-sm text-label-sm">
+<span class="w-3 h-3 rounded-full bg-food-green"></span> Food &amp; Bev (30%)
+                                </div>
+<div class="flex items-center gap-2 font-label-sm text-label-sm">
+<span class="w-3 h-3 rounded-full bg-furniture-amber"></span> Furniture (15%)
+                                </div>
+<div class="flex items-center gap-2 font-label-sm text-label-sm">
+<span class="w-3 h-3 rounded-full bg-apparel-purple"></span> Apparel (10%)
+                                </div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Middle Section: Filter Bar -->
+<section class="bg-surface-container-lowest border border-border-base rounded-lg p-3 flex flex-wrap items-center gap-3">
+<div class="relative flex-1 min-w-[200px]">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" style="font-size: 18px;">search</span>
+<input class="w-full h-9 pl-9 pr-3 rounded border border-border-base bg-surface-container-lowest text-on-surface font-body-base focus:border-primary focus:ring-0" placeholder="Search by SKU or Name..." type="text"/>
+</div>
+<select class="h-9 rounded border border-border-base bg-surface-container-lowest text-on-surface font-label-sm text-label-sm focus:border-primary focus:ring-0 min-w-[140px]">
+<option value="">All Categories</option>
+<option value="electronics">Electronics</option>
+<option value="food">Food &amp; Bev</option>
+<option value="furniture">Furniture</option>
+</select>
+<div class="flex items-center gap-2 border border-border-base rounded h-9 px-3 bg-surface-container-lowest">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Stock:</span>
+<input class="w-24 accent-primary" type="range"/>
+</div>
+<button class="bg-primary text-on-primary h-9 px-4 rounded font-label-sm text-label-sm flex items-center gap-2 hover:bg-surface-tint transition-colors ml-auto">
+<span class="material-symbols-outlined" style="font-size: 18px;">download</span>
+                    Export CSV
+                </button>
+</section>
+<!-- Bottom Section: Data Grid -->
+<section class="bg-surface-container-lowest border border-border-base rounded-lg overflow-hidden flex flex-col h-[500px]">
+<div class="overflow-x-auto flex-1">
+<table class="w-full text-left border-collapse min-w-[800px]">
+<thead class="bg-surface-container-lowest sticky top-0 z-10 border-b border-border-base shadow-[0_1px_0_0_#E5E7EB]">
+<tr>
+<th class="p-3 font-label-sm text-label-sm text-on-surface-variant font-semibold whitespace-nowrap cursor-pointer hover:bg-surface-container-low group">
+<div class="flex items-center gap-1">Product Name <span class="material-symbols-outlined opacity-0 group-hover:opacity-100" style="font-size: 16px;">arrow_downward</span></div>
+</th>
+<th class="p-3 font-label-sm text-label-sm text-on-surface-variant font-semibold whitespace-nowrap cursor-pointer hover:bg-surface-container-low group">
+<div class="flex items-center gap-1">SKU <span class="material-symbols-outlined opacity-0 group-hover:opacity-100" style="font-size: 16px;">arrow_downward</span></div>
+</th>
+<th class="p-3 font-label-sm text-label-sm text-on-surface-variant font-semibold whitespace-nowrap">Category</th>
+<th class="p-3 font-label-sm text-label-sm text-on-surface-variant font-semibold whitespace-nowrap text-right cursor-pointer hover:bg-surface-container-low group">
+<div class="flex items-center justify-end gap-1">Price <span class="material-symbols-outlined opacity-0 group-hover:opacity-100" style="font-size: 16px;">arrow_downward</span></div>
+</th>
+<th class="p-3 font-label-sm text-label-sm text-on-surface-variant font-semibold whitespace-nowrap text-right">Cost</th>
+<th class="p-3 font-label-sm text-label-sm text-on-surface-variant font-semibold whitespace-nowrap text-right cursor-pointer hover:bg-surface-container-low group">
+<div class="flex items-center justify-end gap-1">Stock Qty <span class="material-symbols-outlined opacity-0 group-hover:opacity-100" style="font-size: 16px;">arrow_downward</span></div>
+</th>
+<th class="p-3 font-label-sm text-label-sm text-on-surface-variant font-semibold whitespace-nowrap text-right">Reorder Lvl</th>
+<th class="p-3 font-label-sm text-label-sm text-on-surface-variant font-semibold whitespace-nowrap">Status</th>
+</tr>
+</thead>
+<tbody class="font-body-base">
+<!-- Row 1 -->
+<tr class="border-b border-border-base hover:bg-surface-container-low transition-colors">
+<td class="p-3 font-medium text-primary">Quantum Laptop Pro X</td>
+<td class="p-3 font-body-mono text-body-mono text-on-surface-variant">EL-LAP-092</td>
+<td class="p-3">
+<span class="inline-flex items-center px-2 py-1 rounded-[6px] bg-electronics-bg text-electronics-text font-badge-text text-badge-text h-[24px]">Electronics</span>
+</td>
+<td class="p-3 text-right font-body-mono text-body-mono text-primary">$1,299.00</td>
+<td class="p-3 text-right font-body-mono text-body-mono text-on-surface-variant">$850.00</td>
+<td class="p-3 text-right font-body-mono text-body-mono text-primary">450</td>
+<td class="p-3 text-right font-body-mono text-body-mono text-on-surface-variant">100</td>
+<td class="p-3">
+<span class="inline-flex items-center px-2 py-1 rounded-[6px] bg-status-in-bg text-status-in-text font-badge-text text-badge-text h-[24px]">In Stock</span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="border-b border-border-base hover:bg-surface-container-low transition-colors">
+<td class="p-3 font-medium text-primary">Ergonomic Office Chair V2</td>
+<td class="p-3 font-body-mono text-body-mono text-on-surface-variant">FN-CHR-441</td>
+<td class="p-3">
+<span class="inline-flex items-center px-2 py-1 rounded-[6px] bg-furniture-bg text-furniture-text font-badge-text text-badge-text h-[24px]">Furniture</span>
+</td>
+<td class="p-3 text-right font-body-mono text-body-mono text-primary">$349.99</td>
+<td class="p-3 text-right font-body-mono text-body-mono text-on-surface-variant">$120.50</td>
+<td class="p-3 text-right font-body-mono text-body-mono text-primary">22</td>
+<td class="p-3 text-right font-body-mono text-body-mono text-on-surface-variant">50</td>
+<td class="p-3">
+<span class="inline-flex items-center px-2 py-1 rounded-[6px] bg-status-low-bg text-status-low-text font-badge-text text-badge-text h-[24px]">Low Stock</span>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="border-b border-border-base hover:bg-surface-container-low transition-colors">
+<td class="p-3 font-medium text-primary">Organic Arabica Beans 1kg</td>
+<td class="p-3 font-body-mono text-body-mono text-on-surface-variant">FD-COF-880</td>
+<td class="p-3">
+<span class="inline-flex items-center px-2 py-1 rounded-[6px] bg-food-bg text-food-text font-badge-text text-badge-text h-[24px]">Food &amp; Bev</span>
+</td>
+<td class="p-3 text-right font-body-mono text-body-mono text-primary">$24.50</td>
+<td class="p-3 text-right font-body-mono text-body-mono text-on-surface-variant">$8.00</td>
+<td class="p-3 text-right font-body-mono text-body-mono text-primary">0</td>
+<td class="p-3 text-right font-body-mono text-body-mono text-on-surface-variant">200</td>
+<td class="p-3">
+<span class="inline-flex items-center px-2 py-1 rounded-[6px] bg-status-out-bg text-status-out-text font-badge-text text-badge-text h-[24px]">Out of Stock</span>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="border-b border-border-base hover:bg-surface-container-low transition-colors">
+<td class="p-3 font-medium text-primary">Wireless Noise-Canceling Headphones</td>
+<td class="p-3 font-body-mono text-body-mono text-on-surface-variant">EL-AUD-210</td>
+<td class="p-3">
+<span class="inline-flex items-center px-2 py-1 rounded-[6px] bg-electronics-bg text-electronics-text font-badge-text text-badge-text h-[24px]">Electronics</span>
+</td>
+<td class="p-3 text-right font-body-mono text-body-mono text-primary">$199.00</td>
+<td class="p-3 text-right font-body-mono text-body-mono text-on-surface-variant">$65.00</td>
+<td class="p-3 text-right font-body-mono text-body-mono text-primary">850</td>
+<td class="p-3 text-right font-body-mono text-body-mono text-on-surface-variant">150</td>
+<td class="p-3">
+<span class="inline-flex items-center px-2 py-1 rounded-[6px] bg-status-in-bg text-status-in-text font-badge-text text-badge-text h-[24px]">In Stock</span>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="border-b border-border-base hover:bg-surface-container-low transition-colors">
+<td class="p-3 font-medium text-primary">Merino Wool Blend Sweater</td>
+<td class="p-3 font-body-mono text-body-mono text-on-surface-variant">AP-SWT-005</td>
+<td class="p-3">
+<span class="inline-flex items-center px-2 py-1 rounded-[6px] bg-apparel-bg text-apparel-text font-badge-text text-badge-text h-[24px]">Apparel</span>
+</td>
+<td class="p-3 text-right font-body-mono text-body-mono text-primary">$89.90</td>
+<td class="p-3 text-right font-body-mono text-body-mono text-on-surface-variant">$22.00</td>
+<td class="p-3 text-right font-body-mono text-body-mono text-primary">15</td>
+<td class="p-3 text-right font-body-mono text-body-mono text-on-surface-variant">40</td>
+<td class="p-3">
+<span class="inline-flex items-center px-2 py-1 rounded-[6px] bg-status-low-bg text-status-low-text font-badge-text text-badge-text h-[24px]">Low Stock</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination footer -->
+<div class="bg-surface-container-lowest p-3 border-t border-border-base flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+<div>Showing 1 to 5 of 24,592 entries</div>
+<div class="flex gap-2">
+<button class="px-3 py-1 border border-border-base rounded hover:bg-surface-container-low disabled:opacity-50" disabled="">Previous</button>
+<button class="px-3 py-1 border border-border-base rounded bg-primary text-on-primary">1</button>
+<button class="px-3 py-1 border border-border-base rounded hover:bg-surface-container-low">2</button>
+<button class="px-3 py-1 border border-border-base rounded hover:bg-surface-container-low">3</button>
+<span class="px-2">...</span>
+<button class="px-3 py-1 border border-border-base rounded hover:bg-surface-container-low">Next</button>
+</div>
+</div>
+</section>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aura Enterprise Engine — Logistics Command Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap"
+    rel="stylesheet">
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
+  <script src="https://unpkg.com/recharts@2.12.7/umd/Recharts.js"></script>
+  <style>
+    :root {
+      --bg: #090d16;
+      --surf: #111827;
+      --card: #141d30;
+      --border: #1e293b;
+      --border-hover: #334155;
+      --primary: #2563eb;
+      --primary-hover: #3b82f6;
+      --primary-light: #60a5fa;
+      --primary-bg: rgba(37, 99, 235, 0.15);
+      --success: #10b981;
+      --success-bg: rgba(16, 185, 129, 0.15);
+      --warning: #f59e0b;
+      --warning-bg: rgba(245, 158, 11, 0.15);
+      --danger: #ef4444;
+      --danger-bg: rgba(239, 68, 68, 0.15);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --dim: #64748b;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      background-image: radial-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 0);
+      background-size: 32px 32px;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text);
+      overflow-x: hidden;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #26334d;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #37476b;
+    }
+
+    input,
+    select,
+    button {
+      font-family: inherit;
+    }
+
+    input[type=range] {
+      accent-color: var(--primary-light);
+      cursor: pointer;
+      width: 100%;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .spin {
+      display: inline-block;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    .fade {
+      animation: fadeIn 0.25s ease-out;
+    }
+
+    @keyframes slideInRight {
+      from {
+        transform: translateX(100%);
+      }
+
+      to {
+        transform: translateX(0);
+      }
+    }
+
+    .slide-right {
+      animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .header {
+      background: rgba(9, 13, 22, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      padding: 0 36px;
+    }
+
+    .nav-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 5px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover {
+      color: var(--text);
+    }
+
+    .nav-btn.active {
+      background: var(--surf);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .ent-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+      transition: all 0.2s ease;
+    }
+
+    .ent-card:hover {
+      border-color: var(--border-hover);
+      box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .ent-input {
+      background: #0d1322;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      outline: none;
+      transition: all 0.2s;
+      width: 100%;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .ent-input:focus {
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25), inset 0 2px 4px rgba(0, 0, 0, 0.2);
+      background: #111827;
+    }
+
+    .action-btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 10px rgba(37, 99, 235, 0.3), inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+    }
+
+    .action-btn:hover {
+      background: var(--primary-hover);
+      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.45), inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+
+    .action-btn-secondary {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      border: 1px solid var(--border);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .action-btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--muted);
+    }
+
+    .ent-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 13px;
+    }
+
+    .ent-table th {
+      background: #0f172a;
+      padding: 16px 22px;
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .ent-table td {
+      padding: 16px 22px;
+      border-bottom: 1px solid rgba(30, 41, 59, 0.7);
+      color: var(--text);
+    }
+
+    .ent-tr {
+      transition: background 0.15s;
+      cursor: pointer;
+    }
+
+    .ent-tr:hover td {
+      background: rgba(37, 99, 235, 0.08);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 8px;
+    }
+
+    /* Drawer Modal */
+    .drawer-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      display: flex;
+      justify-content: flex-end;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    .drawer-panel {
+      width: 540px;
+      max-width: 100%;
+      height: 100vh;
+      background: #0e1626;
+      border-left: 1px solid var(--border);
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      box-shadow: -10px 0 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script>
+    const { useState, useMemo, useRef, useCallback } = React;
+    const { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Cell, ResponsiveContainer, PieChart, Pie } = Recharts;
+
+    /* ── PROCEDURAL ENTERPRISE DATA GENERATOR ──────────────────
+       To provide an elite standalone experience without requiring external servers,
+       this LCG algorithm generates exactly 50,000 highly realistic SKU records in-memory.
+    ───────────────────────────────────────────────────────────── */
+    const CATS = ['Networking', 'Compute Core', 'Storage Arrays', 'Enterprise Security', 'Optical Infra', 'Power Systems', 'Cooling & Thermal', 'Rack Hardware', 'Edge Devices', 'Telemetry Infra'];
+    const PROD = {
+      'Networking': ['Enterprise Subnet Gateway', 'Managed PoE 48G Switch', 'Fiber Router Subsystem', 'SD-WAN Interconnect Hub', 'Top-of-Rack Switch Subsystem', 'High-Frequency Layer 3 Router', 'Infiniband Core Gateway', 'Dual-Band Edge Transceiver'],
+      'Compute Core': ['High-Density Compute Blade', 'Neural Acceleration Module', 'Multicore FPGA Processing Blade', 'Quantum Emulation Subsystem', 'Server Rack Compute Core', 'RISC Enterprise Node', 'Virtualization Server Core', 'AI Training Cluster Hub'],
+      'Storage Arrays': ['NVMe Enterprise SAN Node', 'Redundant SAS Storage Enclosure', 'Crystalline Cold Storage Matrix', 'High-Speed SSD RAID Array', 'Distributed Object Store Hub', 'Optic Data Matrix Subsystem', 'Hyper-converged Storage Node'],
+      'Enterprise Security': ['Hardware Firewall Subsystem', 'Zero-Trust Authentication Node', 'Intrusion Detection Gateway', 'Encrypted Subnet Bridge', 'Biometric Server Rack Lock', 'Hardware Security Module (HSM)', 'DDoS Mitigation Shield Hub'],
+      'Optical Infra': ['100G Optical Transceiver Module', 'Dense WDM Mux/Demux Node', 'Singlemode Fiber Patch Panel', 'Optical Regeneration Hub', 'Laser Modulation Transceiver', 'Multimode Fiber Array Unit'],
+      'Power Systems': ['Modular Rackmount UPS 10kVA', 'Redundant Hot-Swap PSU 1600W', 'Intelligent 3-Phase PDU Matrix', 'Automatic Transfer Switch (ATS)', 'Battery Backup Subsystem Module', 'High-Voltage Transformer Core'],
+      'Cooling & Thermal': ['Closed-Loop Liquid Cooling Node', 'Rackmount Exhaust Fan Array', 'Chilled Water In-Row Cooler', 'Smart Thermal Sensor Array', 'Pneumatic Ducting Control Unit', 'Precision Humidity Regulator'],
+      'Rack Hardware': ['42U Server Enclosure Rig', 'Heavy-Duty Sliding Rack Rails', 'Cable Management Articulated Arm', 'Blanking Panel Array Kit', 'Seismic Isolation Rack Base', 'Environmental Sensor Bracket'],
+      'Edge Devices': ['Rugged IoT Telemetry Node', 'Edge AI Inference Device', 'Substation Gateway Module', 'Cellular Backup Modem Rig', 'Industrial Interface Terminal', 'Outdoor Wireless Mesh Node'],
+      'Telemetry Infra': ['Precision GPS Time Source Rig', 'Environmental Diagnostics Hub', 'Network Packet Sniffer Blade', 'Automated Server Diagnostics Unit', 'Vibration Monitoring Array', 'Real-Time SNMP Alarm Node']
+    };
+    const WH = ['Chicago Central Core', 'Dallas Global Hub', 'Ashburn Data Center', 'Seattle Prime Node', 'Newark Transit Port', 'Atlanta Logistics Matrix', 'Denver Operations Hub', 'San Jose Tech Depot'];
+
+    function lcg(seed) {
+      let s = seed >>> 0;
+      return () => {
+        s = (Math.imul(1664525, s) + 1013904223) >>> 0;
+        return s / 4294967296;
+      };
+    }
+
+    const DATA = (() => {
+      const r = lcg(0x811C9DC5);
+      return Array.from({ length: 50000 }, (_, i) => {
+        const cat = CATS[r() * CATS.length | 0];
+        const names = PROD[cat] || ['Standard Asset Hub'];
+        const nm = names[r() * names.length | 0];
+        const rev = (r() * 8 + 1).toFixed(1);
+        const stock = r() * 520 | 0;
+        const price = Math.round((r() * 1890 + 45) * 100) / 100;
+        return {
+          id: i + 1,
+          sku: 'AEE-' + String(i + 1).padStart(6, '0'),
+          name: `${nm} (Rev ${rev})`,
+          category: cat,
+          price: price,
+          stock: stock,
+          warehouse: WH[r() * WH.length | 0],
+          velocity: (r() * 45 + 5).toFixed(1), // daily consumption rate
+          leadTimeDays: (r() * 14 + 3 | 0)
+        };
+      });
+    })();
+
+    /* ── PRE-COMPUTED ANALYTICS ──────────────────────────────── */
+    const TOP10 = [...DATA].sort((a, b) => a.stock - b.stock).slice(0, 10).map(i => ({
+      label: i.name.slice(0, 26) + (i.name.length > 26 ? '…' : ''),
+      stock: i.stock,
+      sku: i.sku,
+      warehouse: i.warehouse
+    }));
+
+    const CAT_VAL = CATS.map(cat => {
+      const val = DATA.filter(i => i.category === cat).reduce((s, i) => s + i.price * i.stock, 0);
+      return { name: cat, value: Math.round(val) };
+    }).sort((a, b) => b.value - a.value);
+
+    const TOTAL_VAL = DATA.reduce((s, i) => s + i.price * i.stock, 0);
+    const OOS = DATA.filter(i => i.stock === 0).length;
+
+    const PIE_C = ['#2563eb', '#3b82f6', '#60a5fa', '#10b981', '#34d399', '#f59e0b', '#fbbf24', '#8b5cf6', '#a78bfa', '#64748b'];
+    const PAGE_SZ = 50;
+    const C = {
+      bg: '#090d16', surf: '#111827', card: '#141d30', border: '#1e293b',
+      primary: '#2563eb', primaryLight: '#60a5fa', green: '#10b981',
+      red: '#ef4444', orange: '#f59e0b', text: '#f8fafc', muted: '#94a3b8', dim: '#64748b'
+    };
+
+    const badge = stock => {
+      if (stock === 0) return { label: 'Out of Stock', bg: 'var(--danger-bg)', color: '#f87171', border: 'rgba(239,68,68,0.3)' };
+      if (stock < 15) return { label: 'Critical Depletion', bg: 'var(--danger-bg)', color: '#fca5a5', border: 'rgba(239,68,68,0.3)' };
+      if (stock < 50) return { label: 'Low Reserve', bg: 'var(--warning-bg)', color: '#fbbf24', border: 'rgba(245,158,11,0.3)' };
+      return { label: 'Optimal Reserve', bg: 'var(--success-bg)', color: '#34d399', border: 'rgba(16,185,129,0.3)' };
+    };
+
+    const fmtN = n => n.toLocaleString();
+    const fmtM = n => '$' + (n / 1e6).toFixed(2) + 'M';
+    const fmtP = n => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    /* ── COMPONENTS ──────────────────────────────────────────── */
+    function Pill({ children, bg, color, borderColor }) {
+      return React.createElement('span', {
+        style: {
+          padding: '5px 12px', borderRadius: 8, fontSize: 12, fontWeight: 600,
+          background: bg, color, border: `1px solid ${borderColor || 'transparent'}`,
+          whiteSpace: 'nowrap', display: 'inline-block'
+        }
+      }, children);
+    }
+
+    function KpiCard({ title, value, changeText, color, icon, isAlert }) {
+      return React.createElement('div', { className: 'ent-card', style: { padding: '26px 30px', flex: 1, minWidth: 280, position: 'relative', overflow: 'hidden' } },
+        React.createElement('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 } },
+          React.createElement('div', { style: { fontSize: 13, color: C.muted, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' } }, title),
+          React.createElement('div', {
+            style: {
+              width: 42, height: 42, borderRadius: 10,
+              background: isAlert ? 'var(--danger-bg)' : color === C.green ? 'var(--success-bg)' : 'var(--primary-bg)',
+              color: isAlert ? C.red : color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20
+            }
+          }, icon)
+        ),
+        React.createElement('div', { style: { fontSize: 36, fontWeight: 700, color: '#fff', lineHeight: 1, marginBottom: 12 } }, value),
+        React.createElement('div', { style: { fontSize: 13, color: isAlert ? '#f87171' : C.muted, display: 'flex', alignItems: 'center', gap: 6 } }, changeText)
+      );
+    }
+
+    /* ── DASHBOARD VIEW ──────────────────────────────────────── */
+    function Dashboard() {
+      const CT = ({ active, payload }) => {
+        if (!active || !payload || !payload.length) return null;
+        const d = payload[0];
+        return React.createElement('div', { style: { background: '#090d16', border: `1px solid var(--border)`, borderRadius: 10, padding: '14px 18px', fontSize: 13, boxShadow: '0 12px 30px rgba(0,0,0,0.5)', zIndex: 100 } },
+          React.createElement('div', { style: { color: C.muted, fontWeight: 600, marginBottom: 4 } }, d.payload.name || d.payload.label),
+          React.createElement('div', { style: { color: C.primaryLight, fontWeight: 700, fontSize: 16 } }, d.value > 999 ? fmtM(d.value) : fmtN(d.value) + ' units in reserve'),
+          d.payload.warehouse ? React.createElement('div', { style: { color: C.dim, marginTop: 4, fontSize: 12 } }, `Location: ${d.payload.warehouse}`) : null
+        );
+      };
+
+      return React.createElement('div', { className: 'fade' },
+        React.createElement('div', { style: { marginBottom: 32 } },
+          React.createElement('h1', { style: { fontSize: 28, fontWeight: 700, color: '#fff', letterSpacing: '-0.02em' } }, 'Operational Command Center'),
+          React.createElement('p', { style: { fontSize: 15, color: C.muted, marginTop: 6 } }, 'Real-time enterprise SKU telemetry and capital allocation across North American logistics hubs.')
+        ),
+
+        React.createElement('div', { style: { display: 'flex', gap: 24, marginBottom: 32, flexWrap: 'wrap' } },
+          React.createElement(KpiCard, {
+            title: 'Active Master Catalog', value: fmtN(DATA.length),
+            changeText: '⚡ 100% Deterministic Local Matrix', color: C.primary, icon: '📦'
+          }),
+          React.createElement(KpiCard, {
+            title: 'Capital Inventory Valuation', value: fmtM(TOTAL_VAL),
+            changeText: '💎 Distributed across 8 Hubs', color: C.green, icon: '🛡️'
+          }),
+          React.createElement(KpiCard, {
+            title: 'Depletion Deficit Alert', value: fmtN(OOS),
+            changeText: `⚠️ ${(OOS / DATA.length * 100).toFixed(1)}% catalog fully exhausted`, color: C.red, icon: '🚨', isAlert: true
+          })
+        ),
+
+        React.createElement('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(520px, 1fr))', gap: 24 } },
+          /* Bar Chart */
+          React.createElement('div', { className: 'ent-card', style: { padding: '28px 32px', minHeight: 440, display: 'flex', flexDirection: 'column' } },
+            React.createElement('div', { style: { marginBottom: 24 } },
+              React.createElement('div', { style: { fontSize: 18, fontWeight: 700, color: '#fff', display: 'flex', alignItems: 'center', gap: 10 } }, '🚨 Requisition Priority — Top 10 Depleted SKUs'),
+              React.createElement('div', { style: { fontSize: 14, color: C.muted, marginTop: 4 } }, 'Items with lowest operational reserve requiring immediate supply chain requisition')
+            ),
+            React.createElement('div', { style: { flex: 1, width: '100%', minHeight: 340 } },
+              React.createElement(ResponsiveContainer, { width: '100%', height: '100%' },
+                React.createElement(BarChart, { data: TOP10, layout: 'vertical', margin: { left: 210, right: 24, top: 10, bottom: 10 } },
+                  React.createElement(CartesianGrid, { strokeDasharray: '3 3', stroke: C.border, horizontal: false }),
+                  React.createElement(XAxis, { type: 'number', tick: { fill: C.muted, fontSize: 12, fontWeight: 600 }, axisLine: { stroke: C.border }, tickLine: false, domain: [0, 'dataMax + 5'] }),
+                  React.createElement(YAxis, { type: 'category', dataKey: 'label', tick: { fill: C.text, fontSize: 13, fontWeight: 500 }, axisLine: false, tickLine: false, width: 200 }),
+                  React.createElement(Tooltip, { content: React.createElement(CT), cursor: { fill: 'rgba(255,255,255,0.03)' } }),
+                  React.createElement(Bar, { dataKey: 'stock', radius: [0, 6, 6, 0] },
+                    TOP10.map((entry, idx) => React.createElement(Cell, { key: idx, fill: entry.stock === 0 ? C.red : entry.stock < 5 ? C.orange : C.primaryLight }))
+                  )
+                )
+              )
+            )
+          ),
+
+          /* Pie Chart */
+          React.createElement('div', { className: 'ent-card', style: { padding: '28px 32px', minHeight: 440, display: 'flex', flexDirection: 'column' } },
+            React.createElement('div', { style: { marginBottom: 24 } },
+              React.createElement('div', { style: { fontSize: 18, fontWeight: 700, color: '#fff', display: 'flex', alignItems: 'center', gap: 10 } }, '📊 Portfolio Capital Breakdown'),
+              React.createElement('div', { style: { fontSize: 14, color: C.muted, marginTop: 4 } }, 'Total financial valuation segmented by hardware logistics category')
+            ),
+            React.createElement('div', { style: { width: '100%', height: 260 } },
+              React.createElement(ResponsiveContainer, { width: '100%', height: '100%' },
+                React.createElement(PieChart, null,
+                  React.createElement(Pie, { data: CAT_VAL, cx: '50%', cy: '50%', outerRadius: 110, innerRadius: 75, dataKey: 'value', stroke: 'var(--card)', strokeWidth: 3, paddingAngle: 3 },
+                    CAT_VAL.map((_, idx) => React.createElement(Cell, { key: idx, fill: PIE_C[idx % PIE_C.length] }))
+                  ),
+                  React.createElement(Tooltip, { formatter: (v, n, p) => [fmtM(v), p.payload.name], contentStyle: { background: '#090d16', border: `1px solid var(--border)`, borderRadius: 10, fontSize: 13, color: '#fff', boxShadow: '0 12px 30px rgba(0,0,0,0.5)' }, itemStyle: { color: C.primaryLight } })
+                )
+              )
+            ),
+            React.createElement('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px 24px', marginTop: 20, paddingTop: 20, borderTop: '1px solid var(--border)' } },
+              CAT_VAL.slice(0, 8).map((d, i) => React.createElement('div', { key: d.name, style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 13 } },
+                React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 10 } },
+                  React.createElement('div', { style: { width: 10, height: 10, borderRadius: 3, background: PIE_C[i] } }),
+                  React.createElement('span', { style: { color: C.muted, fontWeight: 500 } }, d.name)
+                ),
+                React.createElement('span', { style: { color: '#fff', fontWeight: 600 } }, fmtM(d.value))
+              ))
+            )
+          )
+        )
+      );
+    }
+
+    function TableHeader({ label, field, currentSortField, currentSortDir, onSort }) {
+      const isSorted = currentSortField === field;
+      return React.createElement('th', { onClick: () => onSort(field), style: { color: isSorted ? '#fff' : C.muted } },
+        label, ' ', React.createElement('span', { style: { opacity: 0.8, fontSize: 11, marginLeft: 6, color: isSorted ? C.primaryLight : 'inherit' } }, isSorted ? (currentSortDir === 'asc' ? '▲' : '▼') : '⇅')
+      );
+    }
+
+    /* ── SKU QUICK VIEW DRAWER MODAL ─────────────────────────── */
+    function SkuDrawer({ item, onClose, onRestock }) {
+      if (!item) return null;
+      const b = badge(item.stock);
+      const val = item.price * item.stock;
+
+      return React.createElement('div', { className: 'drawer-overlay', onClick: onClose },
+        React.createElement('div', { className: 'drawer-panel slide-right', onClick: e => e.stopPropagation() },
+          React.createElement('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28, paddingBottom: 20, borderBottom: '1px solid var(--border)' } },
+            React.createElement('div', null,
+              React.createElement('span', { className: 'mono', style: { color: C.primaryLight, fontSize: 13, fontWeight: 600 } }, item.sku),
+              React.createElement('h2', { style: { fontSize: 22, fontWeight: 700, color: '#fff', marginTop: 4 } }, 'SKU Specification')
+            ),
+            React.createElement('button', { onClick: onClose, style: { width: 36, height: 36, borderRadius: 10, background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid var(--border)', cursor: 'pointer', fontSize: 16 } }, '✕')
+          ),
+
+          React.createElement('div', { style: { marginBottom: 28 } },
+            React.createElement('h3', { style: { fontSize: 20, color: '#fff', fontWeight: 700, marginBottom: 8 } }, item.name),
+            React.createElement('div', { style: { display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 12 } },
+              React.createElement(Pill, { bg: 'var(--primary-bg)', color: C.primaryLight, borderColor: 'rgba(59,130,246,0.3)' }, item.category),
+              React.createElement(Pill, { bg: b.bg, color: b.color, borderColor: b.border }, b.label)
+            )
+          ),
+
+          React.createElement('div', { className: 'ent-card', style: { padding: '22px 24px', marginBottom: 28 } },
+            React.createElement('div', { style: { fontSize: 12, color: C.muted, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 16 } }, 'Real-Time Inventory Metrics'),
+            React.createElement('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px 20px' } },
+              React.createElement('div', null,
+                React.createElement('div', { style: { fontSize: 13, color: C.muted } }, 'Available Units'),
+                React.createElement('div', { style: { fontSize: 22, fontWeight: 700, color: item.stock === 0 ? C.red : '#fff', marginTop: 4 } }, fmtN(item.stock))
+              ),
+              React.createElement('div', null,
+                React.createElement('div', { style: { fontSize: 13, color: C.muted } }, 'Unit Base Price'),
+                React.createElement('div', { className: 'mono', style: { fontSize: 22, fontWeight: 700, color: '#fff', marginTop: 4 } }, fmtP(item.price))
+              ),
+              React.createElement('div', null,
+                React.createElement('div', { style: { fontSize: 13, color: C.muted } }, 'Total Asset Valuation'),
+                React.createElement('div', { className: 'mono', style: { fontSize: 22, fontWeight: 700, color: C.green, marginTop: 4 } }, fmtP(val))
+              ),
+              React.createElement('div', null,
+                React.createElement('div', { style: { fontSize: 13, color: C.muted } }, 'Supply Lead Time'),
+                React.createElement('div', { style: { fontSize: 22, fontWeight: 700, color: '#fff', marginTop: 4 } }, `${item.leadTimeDays} Business Days`)
+              )
+            )
+          ),
+
+          React.createElement('div', { className: 'ent-card', style: { padding: '22px 24px', marginBottom: 36, background: '#0d1322' } },
+            React.createElement('div', { style: { fontSize: 12, color: C.muted, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 12 } }, 'Logistics Facility Routing'),
+            React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 12 } },
+              React.createElement('div', { style: { width: 36, height: 36, borderRadius: 10, background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 } }, '📍'),
+              React.createElement('div', null,
+                React.createElement('div', { style: { fontSize: 15, fontWeight: 700, color: '#fff' } }, item.warehouse),
+                React.createElement('div', { style: { fontSize: 13, color: C.muted, marginTop: 2 } }, `Estimated Daily Consumption: ${item.velocity} units`)
+              )
+            )
+          ),
+
+          React.createElement('div', { style: { marginTop: 'auto', paddingTop: 24, borderTop: '1px solid var(--border)', display: 'flex', gap: 14 } },
+            React.createElement('button', {
+              onClick: () => onRestock(item.id),
+              className: 'action-btn', style: { flex: 1, justifyContent: 'center', padding: '14px 20px', fontSize: 14 }
+            }, '⚡ Generate Requisition Order (+250 Units)'),
+            React.createElement('button', { onClick: onClose, className: 'action-btn-secondary', style: { padding: '14px 20px' } }, 'Close')
+          )
+        )
+      );
+    }
+
+    /* ── INVENTORY GRID VIEW ─────────────────────────────────── */
+    function Inventory() {
+      const [rawQ, setRawQ] = useState('');
+      const [q, setQ] = useState('');
+      const [cat, setCat] = useState('');
+      const [maxStock, setMaxStock] = useState(500);
+      const [minPrice, setMinPrice] = useState(0);
+      const [maxPrice, setMaxPrice] = useState(2000);
+      const [pg, setPg] = useState(1);
+      const [sf, setSf] = useState('id');
+      const [sd, setSd] = useState('asc');
+      const [busy, setBusy] = useState(false);
+      const [selectedSku, setSelectedSku] = useState(null);
+      const [catalogData, setCatalogData] = useState(DATA);
+      const tmr = useRef(null);
+
+      const onQ = v => {
+        setRawQ(v); setBusy(true);
+        clearTimeout(tmr.current);
+        tmr.current = setTimeout(() => { setQ(v); setPg(1); setBusy(false); }, 400);
+      };
+
+      const onSort = useCallback(field => {
+        if (sf === field) setSd(d => d === 'asc' ? 'desc' : 'asc');
+        else { setSf(field); setSd('asc'); }
+        setPg(1);
+      }, [sf]);
+
+      const handleRestock = id => {
+        setCatalogData(prev => prev.map(item => item.id === id ? { ...item, stock: item.stock + 250 } : item));
+        setSelectedSku(prev => prev ? { ...prev, stock: prev.stock + 250 } : null);
+        alert('Requisition Order dispatched! Added 250 units to inventory balance.');
+      };
+
+      const rows = useMemo(() => {
+        let d = catalogData;
+        if (q) {
+          const low = q.toLowerCase();
+          d = d.filter(i => i.name.toLowerCase().includes(low) || i.sku.toLowerCase().includes(low) || i.category.toLowerCase().includes(low) || i.warehouse.toLowerCase().includes(low));
+        }
+        if (cat) d = d.filter(i => i.category === cat);
+        d = d.filter(i => i.stock <= maxStock && i.price >= minPrice && i.price <= maxPrice);
+        return [...d].sort((a, b) => {
+          let av = a[sf], bv = b[sf];
+          if (typeof av === 'string') { av = av.toLowerCase(); bv = bv.toLowerCase(); }
+          return sd === 'asc' ? (av > bv ? 1 : av < bv ? -1 : 0) : (av < bv ? 1 : av > bv ? -1 : 0);
+        });
+      }, [catalogData, q, cat, maxStock, minPrice, maxPrice, sf, sd]);
+
+      const totalPg = Math.max(1, Math.ceil(rows.length / PAGE_SZ));
+      const pageRows = rows.slice((pg - 1) * PAGE_SZ, pg * PAGE_SZ);
+
+      const exportCSV = () => {
+        const h = ['SKU', 'Product Specification', 'Category', 'Unit Price', 'Stock Reserve', 'Warehouse Node'];
+        const csv = [h, ...rows.map(i => [i.sku, `"${i.name}"`, i.category, i.price, i.stock, `"${i.warehouse}"`])].map(r => r.join(',')).join('\n');
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+        a.download = `Aura_Enterprise_Registry_${new Date().toISOString().slice(0, 10)}.csv`;
+        a.click();
+      };
+
+      const reset = () => { setRawQ(''); setQ(''); setCat(''); setMaxStock(500); setMinPrice(0); setMaxPrice(2000); setPg(1); };
+
+      const pgNums = () => {
+        if (totalPg <= 5) return Array.from({ length: totalPg }, (_, i) => i + 1);
+        if (pg <= 3) return [1, 2, 3, 4, 5];
+        if (pg >= totalPg - 2) return [totalPg - 4, totalPg - 3, totalPg - 2, totalPg - 1, totalPg];
+        return [pg - 2, pg - 1, pg, pg + 1, pg + 2];
+      };
+
+      const NB = (label, disabled, onClick) => React.createElement('button', {
+        onClick, disabled, className: 'action-btn-secondary',
+        style: { padding: '8px 14px', opacity: disabled ? 0.3 : 1, cursor: disabled ? 'default' : 'pointer', fontSize: 13, fontWeight: 600 }
+      }, label);
+
+      return React.createElement('div', { className: 'fade' },
+        React.createElement('div', { style: { marginBottom: 28, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 } },
+          React.createElement('div', null,
+            React.createElement('h1', { style: { fontSize: 28, fontWeight: 700, color: '#fff', letterSpacing: '-0.02em' } }, 'Enterprise SKU Registry'),
+            React.createElement('p', { style: { fontSize: 15, color: C.muted, marginTop: 6 } },
+              'Displaying ', fmtN(Math.min(pg * PAGE_SZ, rows.length)), ' of ',
+              React.createElement('strong', { style: { color: '#fff' } }, fmtN(rows.length)),
+              rows.length < catalogData.length ? React.createElement('span', { style: { color: C.primaryLight } }, ' (filtered from ' + fmtN(catalogData.length) + ')') : null, ' total catalog entries'
+            )
+          ),
+          React.createElement('button', { onClick: exportCSV, className: 'action-btn' }, '⬇ Download Export CSV (' + fmtN(rows.length) + ' rows)')
+        ),
+
+        /* Filters Bar */
+        React.createElement('div', { className: 'ent-card', style: { padding: '24px 28px', marginBottom: 28, display: 'flex', flexWrap: 'wrap', gap: 24, alignItems: 'flex-end' } },
+          React.createElement('div', { style: { flex: '1 1 260px' } },
+            React.createElement('div', { style: { fontSize: 12, color: C.muted, marginBottom: 8, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' } }, 'Global Catalog Query (400ms debounce)'),
+            React.createElement('div', { style: { position: 'relative' } },
+              React.createElement('input', { value: rawQ, onChange: e => onQ(e.target.value), placeholder: 'Search SKU code, hardware name, facility…', className: 'ent-input', style: { paddingLeft: 38 } }),
+              React.createElement('span', { style: { position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', fontSize: 14, color: busy ? C.primaryLight : C.dim }, className: busy ? 'spin' : '' }, busy ? '⟳' : '🔍')
+            )
+          ),
+          React.createElement('div', { style: { flex: '1 1 200px' } },
+            React.createElement('div', { style: { fontSize: 12, color: C.muted, marginBottom: 8, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' } }, 'Hardware Category'),
+            React.createElement('select', { value: cat, onChange: e => { setCat(e.target.value); setPg(1); }, className: 'ent-input', style: { cursor: 'pointer' } },
+              React.createElement('option', { value: '' }, 'All Hardware Sectors'),
+              CATS.map(c => React.createElement('option', { key: c, value: c }, c))
+            )
+          ),
+          React.createElement('div', { style: { flex: '1 1 180px' } },
+            React.createElement('div', { style: { fontSize: 12, color: C.muted, marginBottom: 8, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' } },
+              'Max Stock Limit: ', React.createElement('span', { style: { color: C.primaryLight, fontWeight: 700 } }, maxStock)
+            ),
+            React.createElement('input', { type: 'range', min: 0, max: 520, step: 10, value: maxStock, onChange: e => { setMaxStock(+e.target.value); setPg(1); } })
+          ),
+          React.createElement('div', { style: { flex: '1 1 220px' } },
+            React.createElement('div', { style: { fontSize: 12, color: C.muted, marginBottom: 8, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' } }, 'Unit Valuation Range ($)'),
+            React.createElement('div', { style: { display: 'flex', gap: 10 } },
+              React.createElement('input', { type: 'number', placeholder: 'Min', value: minPrice === 0 ? '' : minPrice, min: 0, onChange: e => { setMinPrice(+e.target.value); setPg(1); }, className: 'ent-input', style: { width: '50%' } }),
+              React.createElement('input', { type: 'number', placeholder: 'Max', value: maxPrice === 2000 ? '' : maxPrice, max: 2000, onChange: e => { setMaxPrice(+e.target.value); setPg(1); }, className: 'ent-input', style: { width: '50%' } })
+            )
+          ),
+          React.createElement('button', { onClick: reset, className: 'action-btn-secondary' }, '✕ Purge Filters')
+        ),
+
+        /* Data Table */
+        React.createElement('div', { className: 'ent-card', style: { padding: 0, overflow: 'hidden' } },
+          React.createElement('div', { style: { overflowX: 'auto', maxHeight: '66vh', overflowY: 'auto' } },
+            React.createElement('table', { className: 'ent-table' },
+              React.createElement('thead', null,
+                React.createElement('tr', null,
+                  React.createElement(TableHeader, { label: 'SKU Identifier', field: 'sku', currentSortField: sf, currentSortDir: sd, onSort }),
+                  React.createElement(TableHeader, { label: 'Hardware Specification', field: 'name', currentSortField: sf, currentSortDir: sd, onSort }),
+                  React.createElement(TableHeader, { label: 'Category', field: 'category', currentSortField: sf, currentSortDir: sd, onSort }),
+                  React.createElement(TableHeader, { label: 'Unit Price', field: 'price', currentSortField: sf, currentSortDir: sd, onSort }),
+                  React.createElement(TableHeader, { label: 'Stock Reserve', field: 'stock', currentSortField: sf, currentSortDir: sd, onSort }),
+                  React.createElement('th', null, 'Fulfillment Status'),
+                  React.createElement(TableHeader, { label: 'Logistics Node', field: 'warehouse', currentSortField: sf, currentSortDir: sd, onSort })
+                )
+              ),
+              React.createElement('tbody', null,
+                pageRows.length === 0
+                  ? React.createElement('tr', null, React.createElement('td', { colSpan: 7, style: { padding: '64px', textAlign: 'center', color: C.dim, fontSize: 15 } }, 'No registry entries match active query parameters.'))
+                  : pageRows.map((row, idx) => {
+                    const b = badge(row.stock);
+                    return React.createElement('tr', {
+                      key: row.id, className: 'ent-tr',
+                      onClick: () => setSelectedSku(row),
+                      style: { background: idx % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.012)' }
+                    },
+                      React.createElement('td', { className: 'mono', style: { color: C.primaryLight, fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap' } }, row.sku),
+                      React.createElement('td', { style: { color: '#fff', maxWidth: 280, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 600 } }, row.name),
+                      React.createElement('td', { style: { whiteSpace: 'nowrap' } }, React.createElement(Pill, { bg: 'var(--primary-bg)', color: C.primaryLight, borderColor: 'rgba(37,99,235,0.3)' }, row.category)),
+                      React.createElement('td', { className: 'mono', style: { color: '#fff', fontSize: 14, fontWeight: 600, whiteSpace: 'nowrap' } }, fmtP(row.price)),
+                      React.createElement('td', { className: 'mono', style: { color: row.stock === 0 ? C.red : row.stock < 15 ? C.orange : C.green, fontWeight: 700, fontSize: 15 } }, fmtN(row.stock)),
+                      React.createElement('td', { style: { whiteSpace: 'nowrap' } }, React.createElement(Pill, { bg: b.bg, color: b.color, borderColor: b.border }, b.label)),
+                      React.createElement('td', { style: { color: C.muted, fontSize: 13, fontWeight: 500, whiteSpace: 'nowrap' } }, row.warehouse)
+                    );
+                  })
+              )
+            )
+          ),
+
+          /* Table Pagination */
+          React.createElement('div', { style: { padding: '20px 28px', borderTop: `1px solid var(--border)`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--surf)', flexWrap: 'wrap', gap: 16 } },
+            React.createElement('div', { style: { fontSize: 13, color: C.muted } },
+              'Registry Index ', React.createElement('strong', { style: { color: '#fff' } }, pg), ' of ', React.createElement('strong', { style: { color: '#fff' } }, fmtN(totalPg)), ' · ', fmtN(rows.length), ' total records'
+            ),
+            React.createElement('div', { style: { display: 'flex', gap: 8, flexWrap: 'wrap' } },
+              NB('« First', pg === 1, () => setPg(1)),
+              NB('‹ Prev', pg === 1, () => setPg(p => Math.max(1, p - 1))),
+              ...pgNums().map(num => React.createElement('button', {
+                key: num, onClick: () => setPg(num),
+                style: {
+                  padding: '8px 16px', borderRadius: 10, fontSize: 13, border: `1px solid ${num === pg ? C.primary : 'var(--border)'}`,
+                  background: num === pg ? C.primary : 'transparent', color: num === pg ? '#fff' : C.text, cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s'
+                }
+              }, num)),
+              NB('Next ›', pg === totalPg, () => setPg(p => Math.min(totalPg, p + 1))),
+              NB('Last »', pg === totalPg, () => setPg(totalPg))
+            )
+          )
+        ),
+
+        React.createElement(SkuDrawer, { item: selectedSku, onClose: () => setSelectedSku(null), onRestock: handleRestock })
+      );
+    }
+
+    /* ── ROOT APP ─────────────────────────────────────────────── */
+    function App() {
+      const [view, setView] = useState('dashboard');
+      const now = new Date().toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+
+      return React.createElement('div', { style: { minHeight: '100vh', background: C.bg, display: 'flex', flexDirection: 'column' } },
+        React.createElement('div', { className: 'header' },
+          React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 16, marginRight: 24 } },
+            React.createElement('div', {
+              style: {
+                width: 42, height: 42, borderRadius: 12, background: C.primary,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, color: '#fff',
+                boxShadow: '0 4px 15px rgba(37,99,235,0.4)', fontWeight: 700
+              }
+            }, '⌬'),
+            React.createElement('div', null,
+              React.createElement('div', { style: { fontWeight: 700, fontSize: 19, letterSpacing: '-0.02em', color: '#fff' } }, 'Aura Enterprise Engine'),
+              React.createElement('div', { style: { fontSize: 11, color: C.primaryLight, letterSpacing: '0.1em', fontWeight: 700, textTransform: 'uppercase' } }, 'Logistics Core Hub v4.5')
+            )
+          ),
+
+          React.createElement('div', { className: 'nav-group' },
+            [['dashboard', '📊 Operational Command'], ['inventory', '📦 SKU Registry Grid']].map(([v, label]) =>
+              React.createElement('button', { key: v, onClick: () => setView(v), className: `nav-btn ${view === v ? 'active' : ''}` }, label)
+            )
+          ),
+
+          React.createElement('div', { style: { marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 24 } },
+            React.createElement('div', { style: { display: 'flex', alignItems: 'center', fontSize: 13, fontWeight: 600, color: C.green, background: 'var(--success-bg)', padding: '7px 16px', borderRadius: 20, border: '1px solid rgba(16,185,129,0.3)' } },
+              React.createElement('span', { className: 'status-dot', style: { background: C.green } }), '50,000 SKUs Live Telemetry'
+            ),
+            React.createElement('div', { style: { fontSize: 13, color: C.muted, fontWeight: 500 } }, now),
+            React.createElement('div', { style: { width: 38, height: 38, borderRadius: 10, background: 'var(--surf)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: '#fff' } }, 'AE')
+          )
+        ),
+
+        React.createElement('div', { style: { padding: '40px 48px', maxWidth: 1640, width: '100%', margin: '0 auto', flex: 1 } },
+          view === 'dashboard' ? React.createElement(Dashboard) : React.createElement(Inventory)
+        ),
+
+        React.createElement('footer', { style: { padding: '24px 48px', borderTop: '1px solid var(--border)', background: 'var(--surf)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 13, color: C.dim, marginTop: 'auto' } },
+          React.createElement('div', null, 'Aura Enterprise Engine · Autonomous Supply Chain Operations Matrix'),
+          React.createElement('div', null, 'All 50,000 catalog entries are generated locally in-memory via deterministic algorithmic modeling.')
+        )
+      );
+    }
+
+    const rootElement = document.getElementById('root');
+    const root = ReactDOM.createRoot(rootElement);
+    root.render(React.createElement(App));
+  </script>
+</body>
+
+</html>
