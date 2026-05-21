@@ -12,7 +12,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Aura Engine — Inventory Command Center",
   description:
-    "Enterprise inventory management dashboard for Apex Logistics. Real-time analytics, intelligent search across 50,000+ SKUs, and instant CSV export.",
+    "Enterprise inventory management dashboard for Aura Enterprise. Real-time analytics, intelligent search across 50,000+ SKUs, and instant CSV export.",
 };
 
 export default function RootLayout({
