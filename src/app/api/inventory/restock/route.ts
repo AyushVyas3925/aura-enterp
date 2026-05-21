@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getInventoryData } from "@/lib/inventoryData";
 
-const POST = async (req: NextRequest) => {
+export async function POST(req: NextRequest) {
   try {
     const { id, quantity } = await req.json();
     const data = getInventoryData();
@@ -16,6 +16,4 @@ const POST = async (req: NextRequest) => {
   } catch {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
-};
-
-export { POST };
+}

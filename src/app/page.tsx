@@ -39,12 +39,11 @@ const Home = function () {
       className="min-h-screen flex flex-col"
       style={{ background: "#F1F5F9", color: "#1b1b1d", fontFamily: "Inter, sans-serif" }}
     >
-      {/* ── STICKY TOP HEADER ── */}
+      {/* Header */}
       <header
         className="sticky top-0 z-50 border-b"
         style={{ background: "#FFFFFF", borderColor: "#E5E7EB" }}
       >
-        {/* Row 1 – brand + utility icons */}
         <div className="flex items-center justify-between px-4 md:px-6 h-14">
           <h1 style={{ fontWeight: 900, fontSize: 18, letterSpacing: "-0.02em" }}>
             Aura Engine
@@ -95,16 +94,13 @@ const Home = function () {
             </div>
           </div>
         </div>
-
-        {/* Row 2 – tabs: pill follows actual button dimensions via refs */}
         <nav aria-label="Main navigation" className="relative px-4 md:px-6 pt-2 pb-3">
           <div
             role="tablist"
             aria-label="Application views"
             className="relative flex items-center gap-2"
           >
-
-            {/* Sliding pill — positioned & sized by measured button DOM rect */}
+            {/* Sliding pill background */}
             {pill.ready && (
               <div
                 aria-hidden="true"
@@ -161,7 +157,7 @@ const Home = function () {
         </nav>
       </header>
 
-      {/* ── PAGE CONTENT ── */}
+      {/* Main Content panels */}
       <main className="flex-1 overflow-hidden relative">
         <div
           id="panel-dashboard"

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getInventoryData, InventoryItem } from "@/lib/inventoryData";
 
-const GET = async (req: NextRequest) => {
+export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
 
   const search = searchParams.get("search")?.toLowerCase() ?? "";
@@ -16,7 +16,8 @@ const GET = async (req: NextRequest) => {
     data = data.filter(
       (item) =>
         item.name.toLowerCase().includes(search) ||
-        item.sku.toLowerCase().includes(search)
+        item.sku.toLowerCase().includes(search) ||
+        item.supplier.toLowerCase().includes(search)
     );
   }
   if (category) data = data.filter((i) => i.category === category);
@@ -46,6 +47,4 @@ const GET = async (req: NextRequest) => {
   }));
 
   return NextResponse.json({ rows: exportRows, total: exportRows.length });
-};
-
-export { GET };
+}
