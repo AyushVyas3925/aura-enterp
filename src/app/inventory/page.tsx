@@ -14,13 +14,13 @@ const CATEGORY_STYLES: Record<string, { bg: string; text: string }> = {
   Electronics: { bg: "#EFF6FF", text: "#1D4ED8" },
   Apparel: { bg: "#F5F3FF", text: "#5B21B6" },
   "Home & Garden": { bg: "#FFFBEB", text: "#92400E" },
-  "Sports & Outdoors": { bg: "#FFF1F2", text: "#9F1239" },
+  Sports: { bg: "#FFF1F2", text: "#9F1239" },
   Automotive: { bg: "#F0FDF4", text: "#166534" },
   "Food & Beverage": { bg: "#ECFDF5", text: "#065F46" },
   "Health & Beauty": { bg: "#FDF4FF", text: "#7E22CE" },
   "Toys & Games": { bg: "#FFF7ED", text: "#C2410C" },
   "Office Supplies": { bg: "#F0F9FF", text: "#0369A1" },
-  "Tools & Hardware": { bg: "#FEF3C7", text: "#92400E" },
+  Furniture: { bg: "#FEF3C7", text: "#92400E" },
 };
 
 function StockBadge({ stock }: { stock: number }) {
@@ -101,8 +101,8 @@ const InventoryPage = () => {
     return sortDir === "desc" ? <ArrowUp size={14} /> : <ArrowDown size={14} />;
   };
 
-  const thStyle = (align?: string) => `p-3 whitespace-nowrap cursor-pointer select-none group hover:bg-gray-50 ${align === "right" ? "text-right" : align === "center" ? "text-center" : "text-left"}`;
-  const thBase = { fontSize: 13, fontWeight: 600, color: "#45464c" };
+  const thStyle = (align?: string) => `p-3 whitespace-nowrap cursor-pointer select-none group hover:bg-gray-50 sticky top-0 bg-white z-10 border-b ${align === "right" ? "text-right" : align === "center" ? "text-center" : "text-left"}`;
+  const thBase = { fontSize: 13, fontWeight: 600, color: "#45464c", borderColor: "#E5E7EB" };
 
   return (
     <section className="flex flex-col gap-4">

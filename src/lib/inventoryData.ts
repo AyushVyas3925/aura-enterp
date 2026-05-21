@@ -43,7 +43,7 @@ export type InventoryItem = {
 };
 
 function generateStockQuantity(): number {
-  const roll = Math.random();
+  const roll = faker.number.float({ min: 0, max: 1 });
   if (roll < 0.005) return 0;
   if (roll < 0.12) return faker.number.int({ min: 1, max: 5 });
   if (roll < 0.22) return faker.number.int({ min: 6, max: 20 });
@@ -53,7 +53,7 @@ function generateStockQuantity(): number {
 }
 
 function pickCategory(): typeof CATEGORY_CONFIG[0] {
-  const r = Math.random();
+  const r = faker.number.float({ min: 0, max: 1 });
   let cumulative = 0;
   for (const cat of CATEGORY_CONFIG) {
     cumulative += cat.intentWeight;
@@ -74,7 +74,7 @@ const SUPPLIERS = [
 
 let _cache: InventoryItem[] | null = null;
 
-export function getInventoryData(count: number = 500): InventoryItem[] {
+export function getInventoryData(count: number = 50000): InventoryItem[] {
   if (_cache) return _cache;
 
   _cache = Array.from({ length: count }, () => {

@@ -21,11 +21,17 @@ const Home = function () {
 
   // Run after paint so DOM dimensions are accurate
   useLayoutEffect(() => {
-    const idx = NAV_TABS.findIndex(t => t.id === view);
-    const btn = btnRefs.current[idx];
-    if (btn) {
-      setPill({ left: btn.offsetLeft, top: btn.offsetTop, width: btn.offsetWidth, height: btn.offsetHeight, ready: true });
-    }
+    const updatePill = () => {
+      const idx = NAV_TABS.findIndex(t => t.id === view);
+      const btn = btnRefs.current[idx];
+      if (btn) {
+        setPill({ left: btn.offsetLeft, top: btn.offsetTop, width: btn.offsetWidth, height: btn.offsetHeight, ready: true });
+      }
+    };
+
+    updatePill();
+    window.addEventListener("resize", updatePill);
+    return () => window.removeEventListener("resize", updatePill);
   }, [view]);
 
   return (
