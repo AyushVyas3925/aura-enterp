@@ -1,12 +1,4 @@
-# Prompts.md — AI Interaction Log
 
-> Per Prodesk IT delivery protocol: all AI-assisted architectural decisions
-> must be documented here. This is not a sign of weakness — it's engineering
-> transparency.
-
----
-
-## Session: 2026-05-18
 
 ### What I needed help with
 
@@ -77,4 +69,4 @@ via `URL.createObjectURL`. Avoids streaming complexity and keeps the logic simpl
 
 ---
 
-*This file will be updated as the project progresses.*
+
