@@ -239,12 +239,12 @@ const InventoryPage = () => {
                           <td className="p-3"><CategoryBadge cat={row.category} /></td>
                           <td className="p-3 text-right" style={{ fontFamily: "ui-monospace, monospace", fontSize: 13, color: "#000" }}>${row.price.toFixed(2)}</td>
                           <td className="p-3 text-right" style={{ fontFamily: "ui-monospace, monospace", fontSize: 13, color: "#45464c" }}>${(row.price * 0.65).toFixed(2)}</td>
-                          <td className="p-3" style={{ minWidth: 140 }}>
-                            <div className="flex flex-col items-end gap-1">
+                          <td className="p-3 text-right" style={{ minWidth: 140 }}>
+                            <div className="flex items-center gap-2 justify-end w-full">
                               <span style={{ fontFamily: "ui-monospace, monospace", fontSize: 13, color: row.stock === 0 ? "#EF4444" : row.stock <= row.reorderPoint ? "#F97316" : "#000", fontWeight: 500 }}>
                                 {row.stock.toLocaleString()}
                               </span>
-                              <div className="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                              <div className="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden shrink-0">
                                 <div className="h-full rounded-full transition-all duration-300" style={{ width: `${percent}%`, backgroundColor: barColor }} />
                               </div>
                             </div>
