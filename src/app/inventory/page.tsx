@@ -101,7 +101,7 @@ const InventoryPage = () => {
     return sortDir === "desc" ? <ArrowUp size={14} /> : <ArrowDown size={14} />;
   };
 
-  const thStyle = "p-3 text-left whitespace-nowrap cursor-pointer select-none group hover:bg-gray-50";
+  const thStyle = (align?: string) => `p-3 whitespace-nowrap cursor-pointer select-none group hover:bg-gray-50 ${align === "right" ? "text-right" : "text-left"}`;
   const thBase = { fontSize: 13, fontWeight: 600, color: "#45464c" };
 
   return (
@@ -187,14 +187,14 @@ const InventoryPage = () => {
                   { key: "name", label: "productName", minWidth: 200 },
                   { key: "sku", label: "sku" },
                   { key: "category", label: "category", noSort: true },
-                  { key: "price", label: "price" },
-                  { key: "cost", label: "cost", noSort: true },
-                  { key: "stock", label: "stockQuantity" },
-                  { key: "reorderPoint", label: "reorderLevel", noSort: true },
+                  { key: "price", label: "price", align: "right" },
+                  { key: "cost", label: "cost", noSort: true, align: "right" },
+                  { key: "stock", label: "stockQuantity", align: "right" },
+                  { key: "reorderPoint", label: "reorderLevel", noSort: true, align: "right" },
                   { key: "lastRestocked", label: "lastUpdated", noSort: true },
                 ].map(col => (
-                  <th key={col.key} className={thStyle} style={{ ...thBase, minWidth: col.minWidth }} onClick={() => !col.noSort && handleSort(col.key as SortCol)}>
-                    <div className="flex items-center gap-1">
+                  <th key={col.key} className={thStyle(col.align)} style={{ ...thBase, minWidth: col.minWidth }} onClick={() => !col.noSort && handleSort(col.key as SortCol)}>
+                    <div className={`flex items-center gap-1 ${col.align === "right" ? "justify-end" : "justify-start"}`}>
                       {col.label}
                       {!col.noSort && <SortIcon col={col.key} />}
                     </div>
@@ -206,9 +206,20 @@ const InventoryPage = () => {
               {isLoading
                 ? Array.from({ length: 12 }).map((_, i) => (
                     <tr key={i} className="border-b" style={{ borderColor: "#E5E7EB" }}>
-                      {Array.from({ length: 8 }).map((_, j) => (
-                        <td key={j} className="p-3"><div className="skeleton h-4 rounded" style={{ width: `${60 + ((i * 8 + j) * 17 % 40)}%` }} /></td>
-                      ))}
+                      {Array.from({ length: 8 }).map((_, j) => {
+                        const isRight = j === 3 || j === 4 || j === 5 || j === 6;
+                        return (
+                          <td key={j} className={`p-3 ${isRight ? "text-right" : "text-left"}`}>
+                            <div
+                              className="skeleton h-4 rounded"
+                              style={{
+                                width: `${60 + ((i * 8 + j) * 17 % 40)}%`,
+                                marginLeft: isRight ? "auto" : undefined,
+                              }}
+                            />
+                          </td>
+                        );
+                      })}
                     </tr>
                   ))
                 : !data?.rows.length

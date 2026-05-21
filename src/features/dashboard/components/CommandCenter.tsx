@@ -55,7 +55,7 @@ function KpiCard({
         </div>
         {trend && (
           <div className="flex items-center gap-1 mt-2 text-xs font-semibold" style={{ color: trendColor }}>
-            {trendColor === "#10B981" && <TrendingUp size={12} />}
+            <TrendingUp size={12} aria-hidden="true" />
             <span>{trend}</span>
           </div>
         )}
