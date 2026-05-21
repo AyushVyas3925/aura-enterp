@@ -101,7 +101,7 @@ const InventoryPage = () => {
     return sortDir === "desc" ? <ArrowUp size={14} /> : <ArrowDown size={14} />;
   };
 
-  const thStyle = (align?: string) => `p-3 whitespace-nowrap cursor-pointer select-none group hover:bg-gray-50 ${align === "right" ? "text-right" : "text-left"}`;
+  const thStyle = (align?: string) => `p-3 whitespace-nowrap cursor-pointer select-none group hover:bg-gray-50 ${align === "right" ? "text-right" : align === "center" ? "text-center" : "text-left"}`;
   const thBase = { fontSize: 13, fontWeight: 600, color: "#45464c" };
 
   return (
@@ -180,21 +180,21 @@ const InventoryPage = () => {
       <div className="bg-white border rounded-lg flex flex-col" style={{ borderColor: "#E5E7EB", height: 520, background: "#FFFFFF", overflowX: "auto" }}>
         {isFetching && !isLoading && <div className="h-0.5 w-full shrink-0" style={{ background: "#3B82F6" }} />}
         <div className="overflow-auto flex-1">
-          <table className="w-full text-left border-collapse min-w-[900px]">
+          <table className="w-full text-left border-collapse min-w-[900px] table-fixed">
             <thead>
               <tr className="border-b" style={{ borderColor: "#E5E7EB" }}>
-                {[
-                  { key: "name", label: "productName", minWidth: 200 },
-                  { key: "sku", label: "sku" },
-                  { key: "category", label: "category", noSort: true },
-                  { key: "price", label: "price", align: "right" },
-                  { key: "cost", label: "cost", noSort: true, align: "right" },
-                  { key: "stock", label: "stockQuantity", align: "right" },
-                  { key: "reorderPoint", label: "reorderLevel", noSort: true, align: "right" },
-                  { key: "lastRestocked", label: "lastUpdated", noSort: true },
-                ].map(col => (
-                  <th key={col.key} className={thStyle(col.align)} style={{ ...thBase, minWidth: col.minWidth }} onClick={() => !col.noSort && handleSort(col.key as SortCol)}>
-                    <div className={`flex items-center gap-1 ${col.align === "right" ? "justify-end" : "justify-start"}`}>
+                {([
+                  { key: "name", label: "productName", minWidth: 200, width: "20%" },
+                  { key: "sku", label: "sku", width: "11%" },
+                  { key: "category", label: "category", noSort: true, width: "12%" },
+                  { key: "price", label: "price", width: "11%" },
+                  { key: "cost", label: "cost", noSort: true, width: "11%" },
+                  { key: "stock", label: "stockQuantity", width: "12%" },
+                  { key: "reorderPoint", label: "reorderLevel", noSort: true, width: "11%" },
+                  { key: "lastRestocked", label: "lastUpdated", noSort: true, width: "12%" },
+                ] as { key: string; label: string; width: string; minWidth?: number; noSort?: boolean; align?: string }[]).map(col => (
+                  <th key={col.key} className={thStyle(col.align)} style={{ ...thBase, minWidth: col.minWidth, width: col.width }} onClick={() => !col.noSort && handleSort(col.key as SortCol)}>
+                    <div className="inline-flex items-center gap-1 justify-start">
                       {col.label}
                       {!col.noSort && <SortIcon col={col.key} />}
                     </div>
@@ -206,20 +206,16 @@ const InventoryPage = () => {
               {isLoading
                 ? Array.from({ length: 12 }).map((_, i) => (
                     <tr key={i} className="border-b" style={{ borderColor: "#E5E7EB" }}>
-                      {Array.from({ length: 8 }).map((_, j) => {
-                        const isRight = j === 3 || j === 4 || j === 5 || j === 6;
-                        return (
-                          <td key={j} className={`p-3 ${isRight ? "text-right" : "text-left"}`}>
-                            <div
-                              className="skeleton h-4 rounded"
-                              style={{
-                                width: `${60 + ((i * 8 + j) * 17 % 40)}%`,
-                                marginLeft: isRight ? "auto" : undefined,
-                              }}
-                            />
-                          </td>
-                        );
-                      })}
+                      {Array.from({ length: 8 }).map((_, j) => (
+                        <td key={j} className="p-3 text-left">
+                          <div
+                            className="skeleton h-4 rounded"
+                            style={{
+                              width: `${60 + ((i * 8 + j) * 17 % 40)}%`,
+                            }}
+                          />
+                        </td>
+                      ))}
                     </tr>
                   ))
                 : !data?.rows.length
@@ -237,19 +233,19 @@ const InventoryPage = () => {
                           <td className="p-3 font-medium" style={{ color: "#000", minWidth: 200 }}>{row.name}</td>
                           <td className="p-3" style={{ fontFamily: "ui-monospace, monospace", fontSize: 13, color: "#45464c" }}>{row.sku}</td>
                           <td className="p-3"><CategoryBadge cat={row.category} /></td>
-                          <td className="p-3 text-right" style={{ fontFamily: "ui-monospace, monospace", fontSize: 13, color: "#000" }}>${row.price.toFixed(2)}</td>
-                          <td className="p-3 text-right" style={{ fontFamily: "ui-monospace, monospace", fontSize: 13, color: "#45464c" }}>${(row.price * 0.65).toFixed(2)}</td>
-                          <td className="p-3 text-right" style={{ minWidth: 140 }}>
-                            <div className="flex items-center gap-2 justify-end w-full">
+                          <td className="p-3 text-left" style={{ fontFamily: "ui-monospace, monospace", fontSize: 13, color: "#000" }}>${row.price.toFixed(2)}</td>
+                          <td className="p-3 text-left" style={{ fontFamily: "ui-monospace, monospace", fontSize: 13, color: "#45464c" }}>${(row.price * 0.65).toFixed(2)}</td>
+                          <td className="p-3 text-left">
+                            <div className="flex flex-col items-start gap-1 w-fit">
                               <span style={{ fontFamily: "ui-monospace, monospace", fontSize: 13, color: row.stock === 0 ? "#EF4444" : row.stock <= row.reorderPoint ? "#F97316" : "#000", fontWeight: 500 }}>
                                 {row.stock.toLocaleString()}
                               </span>
-                              <div className="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden shrink-0">
+                              <div className="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
                                 <div className="h-full rounded-full transition-all duration-300" style={{ width: `${percent}%`, backgroundColor: barColor }} />
                               </div>
                             </div>
                           </td>
-                          <td className="p-3 text-right" style={{ fontFamily: "ui-monospace, monospace", fontSize: 13, color: "#45464c" }}>{row.reorderPoint}</td>
+                          <td className="p-3 text-left" style={{ fontFamily: "ui-monospace, monospace", fontSize: 13, color: "#45464c" }}>{row.reorderPoint}</td>
                           <td className="p-3" style={{ fontSize: 13, color: "#45464c" }}>{row.lastRestocked}</td>
                         </tr>
                       );
